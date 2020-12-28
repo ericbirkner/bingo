@@ -50,14 +50,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.numero{
-  border-radius: 20px;
-  border: 1px solid red;
-  font-size: 3em;
-  text-align: center;
-  width: 100px;
-  height: 100px;
-  line-height: 100px;
-  margin: 20px auto;
+table{
+  td{
+    color:#ccc;
+  }
 }
 </style>
