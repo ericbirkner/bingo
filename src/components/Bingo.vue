@@ -8,12 +8,10 @@
         <button class="btn btn-primary" @click="sacarNumero()">Sacar Número</button>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12" v-if="fin"> Fín del juego </div>
+    <div class="row mt-2 mb-4">
+      <div class="col-12" v-if="fin"> Fín del juego / <a href="window.reload()">jugar otra vez</a> </div>
     </div>
-    <div class="row">
-      <div class="col-12"> {{ $data }} </div>
-    </div>
+    
     
   </div>
 </template>
@@ -21,10 +19,7 @@
 <script>
 export default {
   name: "Bingo",
-  props: {
-    msg: String
-  },
-   data() {
+  data() {
     return {
       numero: null,
       numeros: [],
@@ -64,13 +59,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .numero{
-  border-radius: 20px;
-  border: 1px solid red;
+  border-radius: 60px;
+  border: 3px solid #007bff;;
   font-size: 3em;
   text-align: center;
-  width: 100px;
-  height: 100px;
-  line-height: 100px;
+  width: 120px;
+  height: 120px;
+  line-height: 115px;
   margin: 20px auto;
+  font-weight:700;
 }
 </style>

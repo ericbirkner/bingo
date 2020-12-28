@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-12">
-        <table border="1" class="table">
+      <div class="col-12 mb-3">
+        <table border="1">
           <tr v-for="f in 9" v-bind:key="f">
-            <td v-for="col in 10" v-bind:key="col">{{ imprimeNumero(f,col) }}</td>
+            <td v-for="col in 10" v-bind:key="col" v-html="imprimeNumero(f,col)"></td>
           </tr>
         </table>
       </div>
@@ -16,10 +16,7 @@
 <script>
 export default {
   name: "Cantados",
-  props: {
-    cantados: Array
-  },
-   data() {
+  data() {
     return {
       columna: 0
     };
@@ -39,7 +36,14 @@ export default {
       if(fila > 2){
         numero = (col -1) + (fila*10) - 9;
       }
-      return numero;
+
+      if( this.$store.state.cantados.includes(numero)){
+        return "<strong>"+numero+"</strong>";
+      }else{
+        return numero;
+      }
+
+      
     }
   },
   mounted() {
@@ -49,15 +53,17 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-.numero{
-  border-radius: 20px;
-  border: 1px solid red;
-  font-size: 3em;
-  text-align: center;
-  width: 100px;
-  height: 100px;
-  line-height: 100px;
-  margin: 20px auto;
+<style lang="scss">
+table{
+  width:100%;
+  border: 2px solid #007bff;
+  td{
+    padding:5px;
+    color: #ccc; 
+    border-color: #ccc;    
+  }
+  strong{
+    color:#007bff !important;
+  }
 }
 </style>
