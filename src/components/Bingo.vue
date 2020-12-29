@@ -39,6 +39,7 @@ export default {
         this.numero = this.numeros[bolita];
         //this.cantados.push( this.numeros[bolita]);
         this.$store.commit('addNumero', this.numeros[bolita]);
+        this.cantaNumero(this.numeros[bolita]);
         this.numeros.splice(bolita, 1);
       }else{
         this.fin = true;
@@ -48,6 +49,13 @@ export default {
     randomNumber(min, max){
       const r = Math.random()*(max-min) + min;
       return Math.floor(r);
+    },
+    cantaNumero(numero){
+      if ('speechSynthesis' in window) {
+        var msg = new SpeechSynthesisUtterance();
+        msg.text = numero;
+        window.speechSynthesis.speak(msg);
+      }
     }
   },
   mounted() {
