@@ -1,6 +1,10 @@
 <template>
-  <Bingo />
-  <Cantados />
+  <div class="container">
+    <div class="row align-items-center caja">
+    <Bingo />
+    <Cantados />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -18,6 +22,10 @@ export default {
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+body {
+  margin: 0;
+}
+
 #app {
   font-family: "Open Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -25,4 +33,17 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
+.caja{
+  height: 100vh;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .caja{
+    height: inherit;
+  }
+}
+
+
 </style>

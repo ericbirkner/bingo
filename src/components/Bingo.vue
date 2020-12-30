@@ -1,20 +1,14 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <div class="numero">{{ numero }}</div>
+  
+  <div class="col-lg-5 col-md-6 col-sm-12 text-center  mb-4">
+      <div class="numero" @click="cantaNumero(numero)">{{ numero }}</div>
+      <button class="btn btn-primary" @click="sacarNumero()">
+        Sacar Número
+      </button>
+      <div class="mt-2" v-if="fin">
+        Fín del juego / <a href="javascript:window.reload()">jugar otra vez</a>
       </div>
-      <div class="col-12">
-        <button class="btn btn-primary" @click="sacarNumero()">
-          Sacar Número
-        </button>
-      </div>
-    </div>
-    <div class="row mt-2 mb-4">
-      <div class="col-12" v-if="fin">
-        Fín del juego / <a href="window.reload()">jugar otra vez</a>
-      </div>
-    </div>
+    
   </div>
 </template>
 
@@ -68,14 +62,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .numero {
-  border-radius: 60px;
+  border-radius: 90px;
   border: 3px solid #007bff;
-  font-size: 3em;
+  font-size: 4em;
   text-align: center;
-  width: 120px;
-  height: 120px;
-  line-height: 115px;
+  width: 180px;
+  height: 180px;
+  line-height: 170px;
   margin: 20px auto;
   font-weight: 700;
+  transition: opacity .15s ease-in-out;
 }
 </style>
