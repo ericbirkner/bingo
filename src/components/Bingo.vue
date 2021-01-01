@@ -1,12 +1,12 @@
 <template>
   
-  <div class="col-lg-5 col-md-6 col-sm-12 text-center  mb-4">
+  <div class="col-lg-5 col-md-6 col-sm-12 text-center mb-4">
       <div class="numero" @click="cantaNumero(numero)">{{ numero }}</div>
       <button class="btn btn-primary" @click="sacarNumero()">
         Sacar Número
       </button>
       <div class="mt-2" v-if="fin">
-        Fín del juego / <a href="javascript:window.reload()">jugar otra vez</a>
+        Fín del juego / <a href="javascript:location.reload()">jugar otra vez</a>
       </div>
     
   </div>
