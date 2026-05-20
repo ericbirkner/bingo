@@ -1,85 +1,94 @@
 <template>
-  
-  <div class="col-lg-7 col-md-6 col-sm-12 mb-3">
-    <table border="1">
-      <tr v-for="f in 9" v-bind:key="f">
-        <td
-          v-for="col in 10"
-          v-bind:key="col"
-          v-html="imprimeNumero(f, col)"
-        ></td>
-      </tr>
-    </table>
+  <div class="cantados-container container-fluid">
+    <h3 class="text-center mb-3">Números Cantados</h3>
+    <div class="numbers-grid">
+      <div 
+        v-for="num in numbersToDisplay" 
+        :key="num.id"
+        :class="['number-item', 'd-flex', 'align-items-center', 'justify-content-center', { 'called': num.called }]"
+      >
+        <span>{{ num.value }}</span>
+      </div>
+    </div>
+    <div class="stats row mt-3">
+      <div class="col-6">
+        <p class="mb-0"><strong>Restantes:</strong> {{ remainingCount }}</p>
+      </div>
+      <div class="col-6">
+        <p class="mb-0"><strong>Cantados:</strong> {{ calledCount }}</p>
+      </div>
+    </div>
   </div>
-   
 </template>
 
 <script>
 export default {
   name: "Cantados",
-  data() {
-    return {
-      columna: 0
-    };
-  },
-  methods: {
-    imprimeNumero(fila, col) {
-      let numero = 0;
-      if (fila == 1) {
-        numero = col;
-      } else if (fila == 2) {
-        numero = col + 10;
-        //numero = col + fila*10;
-      } else if (fila > 2) {
-        numero = col - 1 + fila * 10 - 9;
-      }
-
-      if (this.$store.state.cantados.includes(numero)) {
-        return "<strong>" + numero + "</strong>";
-      } else {
-        return numero;
-      }
+  props: {
+    totalNumbers: {
+      type: Number,
+      required: true
+    },
+    calledNumbers: {
+      type: Array,
+      default: () => []
     }
   },
-  mounted() {}
+  computed: {
+    numbersToDisplay() {
+      const total = this.totalNumbers;
+      return Array.from({ length: total }, (_, i) => ({
+        id: i + 1,
+        value: i + 1,
+        called: this.calledNumbers.includes(i + 1)
+      }));
+    },
+    remainingCount() {
+      return this.totalNumbers - this.calledCount;
+    },
+    calledCount() {
+      return this.calledNumbers.length;
+    }
+  }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
-table {
-  width: 100%;
-  border: 2px solid #007bff;
-  tr{
-    td {
-      padding: 5px;
-      color: #ccc;
-      border-color: #ccc;   
-    }
-    &:nth-child(odd){
-      td{
-        &:nth-child(odd){
-          background:#f0f0f0;
-        }
-        &:nth-child(even){
-        background:#fff;
-        }
-      }      
-    }
-    &:nth-child(even){
-      td{
-        &:nth-child(odd){
-          background:#fff;
-        }
-        &:nth-child(even){
-        background:#f0f0f0;
-        }
-      }      
-    }
-  }
-  
-  strong {
-    color: #007bff !important;
-  }
+<style scoped>
+.cantados-container {
+  background: white;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 0.25rem;
+  max-height: 400px;
+  overflow-y: auto;
+  margin: 1rem 0;
+}
+
+.number-item {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  font-weight: bold;
+  background: #f8f9fa;
+}
+
+.number-item.called {
+  background: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  font-weight: bold;
 }
 </style>
