@@ -16,14 +16,14 @@
       <button 
         @click="callNextNumber" 
         :disabled="isGameFinished || calledNumbers.length >= totalNumbers"
-        class="btn btn-success me-2 mb-2"
+        class="btn btn-success m-1"
       >
         {{ isGameFinished ? '¡Juego Terminado!' : 'Cantar Número' }}
       </button>
       <button 
         @click="resetRound" 
         v-if="calledNumbers.length > 0" 
-        class="btn btn-danger mb-2"
+        class="btn btn-danger m-1"
       >
         Reiniciar Ronda
       </button>

@@ -17,10 +17,10 @@
     <div v-else class="game-screen">
       <div class="container-fluid">
         <div class="row align-items-center caja">
-          <div class="col-md-8">
+          <div class="col-md-6 col-xl-4">
             <Bingo :totalNumbers="selectedMode" @gameOver="handleGameOver"/>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6 col-xl-8">
             <Cantados :totalNumbers="selectedMode" :calledNumbers="calledNumbers"/>
           </div>
         </div>
@@ -80,6 +80,7 @@ export default {
 body {
   margin: 0;
   background: linear-gradient(135deg, #d3e6bb 0%, #058910 100%);
+  background-attachment: fixed;
   min-height: 100vh;
 }
 
