@@ -79,7 +79,7 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap");
 body {
   margin: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #d3e6bb 0%, #058910 100%);
   min-height: 100vh;
 }
 
@@ -142,17 +142,17 @@ body {
     }
 
     &.btn-75 {
-      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+      background: linear-gradient(135deg, #b5cceaf7 0%, #6d6febc6 100%);
     }
 
     &.btn-90 {
-      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      background: linear-gradient(135deg, #a8edea 0%, #d6fef6 100%);
     }
   }
 }
 
 .game-screen {
-  position: relative;
+
 }
 
 .caja {

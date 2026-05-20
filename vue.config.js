@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: "",
+  publicPath: "/mi-bingo/",
 
   chainWebpack: config => {
     config.plugin("html").tap(args => {
