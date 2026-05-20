@@ -1,5 +1,7 @@
 module.exports = {
-  publicPath: "/bingo/",
+  publicPath: process.env.NODE_ENV === 'production' 
+    ? '/bingo/' // Cambia 'bingo' por el nombre de tu repo si es diferente
+    : '/',
 
   chainWebpack: config => {
     config.plugin("html").tap(args => {
