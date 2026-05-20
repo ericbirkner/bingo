@@ -4,7 +4,7 @@ name: Deploy Vue App to GitHub Pages
 on:
   # Se ejecuta en pushes al branch principal
   push:
-    branches: ["master"]
+    branches: ["master"]  # Cambia a "main" si ese es tu branch principal
 
   # Permite ejecutar manualmente desde la pestaña Actions
   workflow_dispatch:
@@ -31,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18'  # Actualizado a una versión más reciente
           cache: 'npm'
       
       - name: Install dependencies
