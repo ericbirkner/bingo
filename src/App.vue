@@ -5,7 +5,7 @@
     <div v-else class="game-screen">
       <div class="container-fluid">
         <div class="row align-items-center caja">
-          <div class="col-md-6 col-xl-4">
+          <div class="col-md-6 col-xl-4 p-0">
             <Bingo
               :totalNumbers="selectedMode"
               @gameOver="handleGameOver"
@@ -13,7 +13,7 @@
               @reset="handleReset"
             />
           </div>
-          <div class="col-md-6 col-xl-8">
+          <div class="col-md-6 col-xl-8 p-0">
             <Cantados
               :totalNumbers="selectedMode"
               :calledNumbers="calledNumbers"
@@ -104,10 +104,16 @@ export default {
 /* setup-screen and mode button styles moved to shared.scss */
 
 .game-screen {
+  min-height: 100vh;
 }
 
 .caja {
+  width: 100%;
   height: 100vh;
+  display: flex;
+  align-items: center;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 @media only screen and (max-width: 600px) {

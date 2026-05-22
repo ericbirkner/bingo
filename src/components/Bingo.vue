@@ -1,18 +1,15 @@
 <template>
   <div class="bingo-container">
     <div class="top-stats">
-      <div class="stat-box">
-        <span class="stat-value">{{ calledNumbers.length }}</span>
-        <span class="stat-label">Cantados</span>
-      </div>
-      <div class="stat-box">
-        <span class="stat-value">{{ totalNumbers }}</span>
-        <span class="stat-label">Total</span>
+      <div class="stat-box stat-single">
+        <span class="stat-text"
+          >Bola {{ nextBallIndex }} de {{ totalNumbers }}</span
+        >
       </div>
     </div>
 
     <div class="magic-ball-container">
-      <div class="magic-ball">
+      <div class="magic-ball" @click="replayLastNumber">
         <div class="glow-top"></div>
         <div class="glow-bottom"></div>
         <div class="current-number">{{ currentNumber || "--" }}</div>
@@ -45,6 +42,9 @@ export default {
   computed: {
     remainingNumbers() {
       return this.availableNumbers.length;
+    },
+    nextBallIndex() {
+      return Math.min(this.calledNumbers.length + 1, this.totalNumbers || 0);
     },
   },
   methods: {
@@ -86,6 +86,11 @@ export default {
         window.speechSynthesis.speak(msg);
       }
     },
+    replayLastNumber() {
+      if (this.currentNumber != null) {
+        this.cantaNumero(this.currentNumber.toString());
+      }
+    },
     reset() {
       this.initializeGame();
       this.$emit("reset");
@@ -111,6 +116,7 @@ export default {
   height: 100%;
   padding: 1rem;
   box-sizing: border-box;
+  position: relative;
 }
 
 .top-stats {
@@ -125,16 +131,30 @@ export default {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.stat-box {
-  text-align: center;
-}
+@media (max-width: 600px) {
+  .top-stats {
+    position: static;
+    width: auto;
+    align-self: flex-end;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    gap: 0.25rem;
+  }
 
-.stat-value {
-  display: block;
-  font-size: 2rem;
-  font-weight: 700;
-  color: #00ffff;
-  text-shadow: 0 0 10px #00ffff;
+  .top-stats .stat-value,
+  .stat-single .stat-text {
+    font-size: 1.1rem;
+  }
+
+  .top-stats .stat-label {
+    font-size: 0.65rem;
+  }
 }
 
 .stat-label {
@@ -142,6 +162,15 @@ export default {
   color: #aaaaaa;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.stat-single .stat-text {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #00ffff;
+  text-shadow: 0 0 10px #00ffff;
+  text-transform: none;
 }
 
 .magic-ball-container {
@@ -160,6 +189,7 @@ export default {
   justify-content: center;
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
   border: 2px solid #00ffff;
+  cursor: pointer;
 }
 
 .current-number {
@@ -197,5 +227,21 @@ export default {
   max-width: 200px;
 }
 
-.btn-placeholder { /* button styles moved to src/assets/styles/shared.scss */ }
+@media (max-width: 600px) {
+  .controls {
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.75rem;
+    max-width: 100%;
+  }
+
+  .controls button {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.btn-placeholder {
+  /* button styles moved to src/assets/styles/shared.scss */
+}
 </style>
