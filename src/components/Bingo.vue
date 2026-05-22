@@ -1,37 +1,27 @@
 <template>
-  <div class="bingo-container container-fluid">
-    <div class="current-number-display text-center my-4">
-      <div v-if="lastCalledNumber" class="last-number">
-        <h2 class="text-primary">Último Número:</h2>
-        <div class="number-circle d-flex align-items-center justify-content-center mx-auto">
-          {{ lastCalledNumber }}
-        </div>
+  <div class="bingo-container">
+    <div class="top-stats">
+      <div class="stat-box">
+        <span class="stat-value">{{ calledNumbers.length }}</span>
+        <span class="stat-label">Cantados</span>
       </div>
-      <div v-else class="no-number">
-        <h2 class="text-muted">Esperando...</h2>
+      <div class="stat-box">
+        <span class="stat-value">{{ totalNumbers }}</span>
+        <span class="stat-label">Total</span>
       </div>
     </div>
-    
-    <div class="game-controls text-center mb-4">
-      <button 
-        @click="callNextNumber" 
-        :disabled="isGameFinished || calledNumbers.length >= totalNumbers"
-        class="btn btn-success m-1"
-      >
-        {{ isGameFinished ? '¡Juego Terminado!' : 'Cantar Número' }}
-      </button>
-      <button 
-        @click="resetRound" 
-        v-if="calledNumbers.length > 0" 
-        class="btn btn-danger m-1"
-      >
-        Reiniciar Ronda
-      </button>
+
+    <div class="magic-ball-container">
+      <div class="magic-ball">
+        <div class="glow-top"></div>
+        <div class="glow-bottom"></div>
+        <div class="current-number">{{ currentNumber || "--" }}</div>
+      </div>
     </div>
-    
-    <div class="game-info text-center mb-4">
-      <p class="mb-1">Números cantados: {{ calledNumbers.length }} de {{ totalNumbers }}</p>
-      <p class="mb-0">Modalidad: Bingo de {{ totalNumbers }} números</p>
+
+    <div class="controls">
+      <button @click="drawNumber" class="btn-draw">Sacar Número</button>
+      <button @click="reset" class="btn-reset">Reiniciar</button>
     </div>
   </div>
 </template>
@@ -42,130 +32,170 @@ export default {
   props: {
     totalNumbers: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      calledNumbers: [],
+      currentNumber: null,
       availableNumbers: [],
-      lastCalledNumber: null,
-      isGameFinished: false
+      calledNumbers: [],
     };
   },
-  mounted() {
-    this.initializeAvailableNumbers();
+  computed: {
+    remainingNumbers() {
+      return this.availableNumbers.length;
+    },
   },
   methods: {
-    initializeAvailableNumbers() {
-      this.availableNumbers = Array.from({ length: this.totalNumbers }, (_, i) => i + 1);
+    initializeGame() {
+      this.availableNumbers = Array.from(
+        { length: this.totalNumbers },
+        (_, i) => i + 1,
+      );
+      this.calledNumbers = [];
+      this.currentNumber = null;
     },
-    
-    callNextNumber() {
-      if (this.isGameFinished || this.availableNumbers.length === 0) {
-        this.isGameFinished = true;
-        this.$emit('gameOver');
+    drawNumber() {
+      if (this.availableNumbers.length === 0) {
+        this.$emit("gameOver");
         return;
       }
-      
-      const randomIndex = Math.floor(Math.random() * this.availableNumbers.length);
-      const number = this.availableNumbers.splice(randomIndex, 1)[0];
-      this.calledNumbers.push(number);
-      this.lastCalledNumber = number;
-      
-      // Llamar a la función de audio original
-      this.cantaNumero(number);
-      
-      // Emitir el número cantado para que otros componentes lo reciban
-      this.$emit('numberCalled', number);
-      
-      // Verificar si se han cantado todos los números
-      if (this.calledNumbers.length >= this.totalNumbers) {
-        this.isGameFinished = true;
-        setTimeout(() => {
-          this.$emit('gameOver');
-        }, 1000);
-      }
+
+      const randomIndex = Math.floor(
+        Math.random() * this.availableNumbers.length,
+      );
+      const drawnNumber = this.availableNumbers[randomIndex];
+
+      this.currentNumber = drawnNumber;
+      this.calledNumbers.push(drawnNumber);
+      this.availableNumbers.splice(randomIndex, 1);
+
+      // Emitir el número cantado para que Cantados lo reciba
+      this.$emit("numberCalled", drawnNumber);
+
+      // Llamar a la función de síntesis de voz
+      this.cantaNumero(drawnNumber.toString());
     },
-    
-    // Tu función de audio original
     cantaNumero(numero) {
       if ("speechSynthesis" in window) {
         var msg = new SpeechSynthesisUtterance();
         msg.text = numero;
-        msg.lang = 'es-ES'; // Idioma español
+        msg.lang = "es-ES"; // Idioma español
         msg.rate = 0.8; // Velocidad un poco más lenta para claridad
         window.speechSynthesis.speak(msg);
       }
     },
-    
-    resetRound() {
-      this.calledNumbers = [];
-      this.lastCalledNumber = null;
-      this.isGameFinished = false;
-      this.initializeAvailableNumbers();
-    }
+    reset() {
+      this.initializeGame();
+      this.$emit("reset");
+    },
+  },
+  mounted() {
+    this.initializeGame();
   },
   watch: {
-    calledNumbers: {
-      handler(newVal) {
-        // Propagar los números cantados al componente padre
-        this.$parent.calledNumbers = [...newVal];
-      },
-      deep: true
-    }
-  }
+    totalNumbers() {
+      this.initializeGame();
+    },
+  },
 };
 </script>
 
 <style scoped>
 .bingo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   padding: 1rem;
-  background: white;
+  box-sizing: border-box;
+}
+
+.top-stats {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
-  margin: 1rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.number-circle {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: #3498db;
-  color: white;
+.stat-box {
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
   font-size: 2rem;
-  font-weight: bold;
-  border: 5px solid #2980b9;
-  margin-top: 1rem;
+  font-weight: 700;
+  color: #00ffff;
+  text-shadow: 0 0 10px #00ffff;
 }
 
-.btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  transition: all 0.3s ease;
+.stat-label {
+  font-size: 0.8rem;
+  color: #aaaaaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.btn-success {
-  background: #2ecc71;
-  border: none;
+.magic-ball-container {
+  position: relative;
+  margin-bottom: 2rem;
 }
 
-.btn-success:hover:not(:disabled) {
-  background: #27ae60;
+.magic-ball {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ffff;
 }
 
-.btn-success:disabled {
-  background: #95a5a6;
-  cursor: not-allowed;
+.current-number {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 0 20px #00ffff;
+  font-family: "Poppins", sans-serif;
 }
 
-.btn-danger {
-  background: #e74c3c;
-  border: none;
+.glow-top,
+.glow-bottom {
+  position: absolute;
+  width: 100%;
+  height: 30px;
+  border-radius: 50%;
+  filter: blur(15px);
 }
 
-.btn-danger:hover {
-  background: #c0392b;
+.glow-top {
+  top: -15px;
+  background: radial-gradient(circle, #00ffff 0%, transparent 70%);
 }
+
+.glow-bottom {
+  bottom: -15px;
+  background: radial-gradient(circle, #ff00ff 0%, transparent 70%);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 200px;
+}
+
+.btn-placeholder { /* button styles moved to src/assets/styles/shared.scss */ }
 </style>
